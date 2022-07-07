@@ -110,6 +110,7 @@ cp .env.template .env #replace values inside ".env"
 node test.js
 ```
  
+``` 
 started: wallet 0xXXXX - gasPrice 5000000000 - contract owner: 0xXXXX
 [bsc-ws-node.nariox.org] You are connected on 0xXXXX
 [8124531] [6/8/2021, 7:53:20 PM]: [bsc-ws-node.nariox.org] [BUSD/BNB pancake>panther] Arbitrage checked! Expected profit: -0.015 $-4.99 - -0.15%
