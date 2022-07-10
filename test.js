@@ -25,8 +25,8 @@ const web3 = new Web3(
     new Web3.providers.WebsocketProvider(process.env.WSS_BLOCKS_TEST, {
         reconnect: {
             auto: true,
-            delay: 5000, // ms
-            maxAttempts: 5,
+            delay: process.env.DELAY, // ms
+            maxAttempts: process.env.MAX_ATTEMPTS,
             onTimeout: false
         }
     })
@@ -103,7 +103,7 @@ const init = async () => {
                     console.log(`[${block.number}] [${new Date().toLocaleString()}]: [${provider}] [${pair.name}] Arbitrage opportunity found! Expected profit: ${(profit / 1e18).toFixed(3)} $${profitUsd.toFixed(2)} - ${percentage.toFixed(2)}%`);
 
                     const tx = flashswap.methods.startArbitrage(
-                        block.number + 2,
+                        block.number + process.env.BLOCK_NUMBER,
                         pair.tokenBorrow,
                         pair.tokenPay,
                         new BigNumber(pair.amountTokenPay * 1e18),
@@ -120,7 +120,7 @@ const init = async () => {
                         return;
                     }
 
-                    const myGasPrice = new BigNumber(gasPrice).plus(gasPrice * 0.2212).toString();
+                    const myGasPrice = new BigNumber(gasPrice).plus(gasPrice * process.env.GAS_MULTIPLIER).toString();
                     const txCostBNB = Web3.utils.toBN(estimateGas) * Web3.utils.toBN(myGasPrice);
 
                     let gasCostUsd = (txCostBNB / 1e18) * prices[process.env.BNB_MAINNET.toLowerCase()];

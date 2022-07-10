@@ -1,7 +1,7 @@
 const request = require("async-request");
 
 module.exports.getPrices = async () => {
-    const response = await request('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,ethereum,bitcoin,tether,usd-coin,busd&vs_currencies=usd');
+    const response = await request('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,ethereum,bitcoin,tether,usd-coin,busd,chainlink,litecoin,sushi,uniswap&vs_currencies=usd');
 
     const prices = {};
 
@@ -12,6 +12,7 @@ module.exports.getPrices = async () => {
         prices['0x2170Ed0880ac9A755fd29B2688956BD959F933F8'.toLowerCase()] = json.ethereum.usd;
         prices['0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c'.toLowerCase()] = json.bitcoin.usd;
         prices['0x55d398326f99059ff775485246999027b3197955'.toLowerCase()] = json.tether.usd;
+        prices['0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d'.toLowerCase()] = json['usd-coin'].usd;
         // prices['??'.toLowerCase()] = json['usd-coin'].usd;
     } catch (e) {
         console.error(e)
