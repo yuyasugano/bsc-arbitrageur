@@ -96,12 +96,12 @@ const init = async () => {
 
                 const profitUsd = profit / 1e18 * price;
                 const percentage = (100 * (profit / 1e18)) / pair.amountTokenPay;
+
                 console.log(`[${block.number}] [${new Date().toLocaleString()}]: [${provider}] [${pair.name}] Arbitrage checked! Expected profit: ${(profit / 1e18).toFixed(3)} $${profitUsd.toFixed(2)} - ${percentage.toFixed(2)}%`);
 
                 if (profit > 0) {
                     console.log(`[${block.number}] [${new Date().toLocaleString()}]: [${provider}] [${pair.name}] Arbitrage opportunity found! Expected profit: ${(profit / 1e18).toFixed(3)} $${profitUsd.toFixed(2)} - ${percentage.toFixed(2)}%`);
 
-                    // block.number + 1 for mainnet
                     const tx = flashswap.methods.startArbitrage(
                         block.number + process.env.BLOCK_NUMBER,
                         pair.tokenBorrow,
@@ -126,7 +126,7 @@ const init = async () => {
                     let gasCostUsd = (txCostBNB / 1e18) * prices[BNB_MAINNET.toLowerCase()];
                     const profitMinusFeeInUsd = profitUsd - gasCostUsd;
 
-                    if (profitMinusFeeInUsd < 0.6) {
+                    if (profitMinusFeeInUsd < process.env.EFFECTIVE_PROFIT) {
                         console.log(`[${block.number}] [${new Date().toLocaleString()}] [${provider}]: [${pair.name}] stopped: `, JSON.stringify({
                             profit: "$" + profitMinusFeeInUsd.toFixed(2),
                             profitWithoutGasCost: "$" + profitUsd.toFixed(2),
@@ -139,7 +139,7 @@ const init = async () => {
                         }));
                     }
 
-                    if (profitMinusFeeInUsd > 0.6) {
+                    if (profitMinusFeeInUsd >= process.env.EFFECTIVE_PROFIT) {
                         console.log(`[${block.number}] [${new Date().toLocaleString()}] [${provider}]: [${pair.name}] and go: `, JSON.stringify({
                             profit: "$" + profitMinusFeeInUsd.toFixed(2),
                             profitWithoutGasCost: "$" + profitUsd.toFixed(2),

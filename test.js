@@ -126,7 +126,7 @@ const init = async () => {
                     let gasCostUsd = (txCostBNB / 1e18) * prices[process.env.BNB_MAINNET.toLowerCase()];
                     const profitMinusFeeInUsd = profitUsd - gasCostUsd;
 
-                    if (profitMinusFeeInUsd < 0.6) {
+                    if (profitMinusFeeInUsd < EFFECTIVE_PROFIT) {
                         console.log(`[${block.number}] [${new Date().toLocaleString()}] [${provider}]: [${pair.name}] stopped: `, JSON.stringify({
                             profit: "$" + profitMinusFeeInUsd.toFixed(2),
                             profitWithoutGasCost: "$" + profitUsd.toFixed(2),
@@ -139,7 +139,7 @@ const init = async () => {
                         }));
                     }
 
-                    if (profitMinusFeeInUsd > 0.6) {
+                    if (profitMinusFeeInUsd >= EFFECTIVE_PROFIT) {
                         console.log(`[${block.number}] [${new Date().toLocaleString()}] [${provider}]: [${pair.name}] and go: `, JSON.stringify({
                             profit: "$" + profitMinusFeeInUsd.toFixed(2),
                             profitWithoutGasCost: "$" + profitUsd.toFixed(2),

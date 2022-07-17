@@ -24,6 +24,7 @@ module.exports.getPairs = () => {
     const LTC_MAINNET = '0x4338665CBB7B2485A8855A139b75D5e34AB0DB94';
     const SUSHI_MAINNET = '0x947950BcC74888a40Ffa2593C5798F11Fc9124C4';
     const UNI_MAINNET = '0xBf5140A22578168FD562DCcF235E5D43A02ce9B1';
+    const ETH_MAINNET = '0x2170Ed0880ac9A755fd29B2688956BD959F933F8';
 
     const pairs = [
         {
@@ -130,6 +131,42 @@ module.exports.getPairs = () => {
             tokenBorrow: BUSD_MAINNET,
             amountTokenPay: amount,
             tokenPay: BTCB_MAINNET,
+            sourceRouter: ape.router,
+            targetRouter: pancake.router,
+            sourceFactory: ape.factory,
+        },
+        {
+            name: 'BUSD/ETH pancake>panther',
+            tokenBorrow: BUSD_MAINNET,
+            amountTokenPay: amount,
+            tokenPay: ETH_MAINNET,
+            sourceRouter: pancake.router,
+            targetRouter: panther.router,
+            sourceFactory: pancake.factory,
+        },
+        {
+            name: 'BUSD/ETH panther>pancake',
+            tokenBorrow: BUSD_MAINNET,
+            amountTokenPay: amount,
+            tokenPay: ETH_MAINNET,
+            sourceRouter: panther.router,
+            targetRouter: pancake.router,
+            sourceFactory: panther.factory,
+        },
+        {
+            name: 'BUSD/ETH pancake>ape',
+            tokenBorrow: BUSD_MAINNET,
+            amountTokenPay: amount,
+            tokenPay: ETH_MAINNET,
+            sourceRouter: pancake.router,
+            targetRouter: ape.router,
+            sourceFactory: pancake.factory,
+        },
+        {
+            name: 'BUSD/ETH ape>pancake',
+            tokenBorrow: BUSD_MAINNET,
+            amountTokenPay: amount,
+            tokenPay: ETH_MAINNET,
             sourceRouter: ape.router,
             targetRouter: pancake.router,
             sourceFactory: ape.factory,
