@@ -19,11 +19,19 @@ The codes are written for informational and educational purpose only, https and 
  
 All examples are more or less overengineered for a quick start, so here we have a KISS solution.
 
+ * Parameterize key variables in Node.js script
  * Reduce overall contract size for low gas fee on deployment
  * Provide a on chain validation contract method to let nodes check arbitrage opportunities
  * Stop arbitrage opportunity execution as soon as possible if its already gone to reduce gas fee on failure
  * Interface callbacks for common DEX on "Binance Smart Chain" are included
-
+ 
+## Parameters
+ 
+ * DELAY - auto reconnection delay in ms
+ * MAX\_ATTEMPTS - a number of attempts at maximum
+ * BLOCK\_NUMBER - must be within set block number, out of block error occurs
+ * GAS\_MULTIPLIER - multipler value for the gas price to estimate a gas cost
+ * EFFECTIVE\_PROFIT - arbitrage run if your profit exceeds this value in USD (default: 0.6 USD) 
 ## Infrastructure
 
 Basically arbitrage opportunity dont last long, your transaction must make it into the next block. So you have <3 seconds watching for opportunities, decide and execute transaction. Sometimes there are also a chance to 2-3 have block, see example below. You can change some parameters in `main.js` or `test.js` scripts
@@ -40,8 +48,7 @@ Basically arbitrage opportunity dont last long, your transaction must make it in
 ### Requirements
  
  * You have a time window of 1000ms every 3 seconds (blocktime on BSC) and you should make it into the next transaction
- * Websocket connection is needed to listen directly for new incoming blocks (I choose Moralis endpoints)
- * Public provided Websocket are useless `bsc-ws-node.nariox.org` simply they are way behind notify new blocks 
+ * Websocket connection is needed to listen directly for new incoming blocks (I choose Chainstack endpoints)
  * Use a non public provider; or build your own node (light node helps) and better have multiple owns; let the fastest win 
  * Spread your transaction execution around all possible providers, first one wins (in any case transactions are only execute once based on `nonce`) 
  * Find suitable pairs with liquidity but not with much transaction 
@@ -59,12 +66,12 @@ Check arbitrage opportunity between DEX. Read only method the one blockchain
 
 ```
     function check(
-        address _tokenBorrow, // example: BUSD
-        uint256 _amountTokenPay, // example: BNB => 10 * 1e18
-        address _tokenPay, // example: BNB
+        address _tokenPay, // source currency when we will get; example BNB
+        address _tokenSwap, // swapped currency with the source currency; example BUSD
+        uint _amountTokenPay, // example: BNB => 10 * 1e18
         address _sourceRouter,
         address _targetRouter
-    ) public view returns(int256, uint256) {
+    ) public view returns(int, uint) {}
 ```
 
 Starts the execution. You are able to estimate the gas usage of the function, its also directly validating the opportunity. Its slow depending on connected nodes.
@@ -72,13 +79,13 @@ Starts the execution. You are able to estimate the gas usage of the function, it
 ```
     function startArbitrage(
         uint _maxBlockNumber,
-        address _tokenBorrow, // example BUSD
-        address _tokenPay, // our profit and what we will get; example BNB
-        uint256 _amountTokenPay,
+        address _tokenPay, // source currency when we will get; example BNB
+        address _tokenSwap, // swapped currency with the source currency; example BUSD
+        uint _amountTokenPay, // example: BNB => 10 * 1e18
         address _sourceRouter,
         address _targetRouter,
         address _sourceFactory
-    ) external {
+    ) external {}
 ```
  
 As all developers are lazy and just forking projects around without any rename a common implementation is possible. Basically the pair contract call the foreign method of the contract. You can find them the naming in any pair contract inside the `swap()` method.
@@ -89,11 +96,11 @@ Extend method if needed:
 
 ```
 # internal callback 
-function execute(address _sender, uint256 _amount0, uint256 _amount1, bytes calldata _data) internal
+function execute(address _sender, uint256 _amount0, uint256 _amount1, bytes calldata _data) internal {}
 
 # foreign methods that get called
-function pancakeCall(address _sender, uint256 _amount0, uint256 _amount1, bytes calldata _data) external
-function uniswapV2Call(address _sender, uint256 _amount0, uint256 _amount1, bytes calldata _data) external
+function pancakeCall(address _sender, uint256 _amount0, uint256 _amount1, bytes calldata _data) external {}
+function uniswapV2Call(address _sender, uint256 _amount0, uint256 _amount1, bytes calldata _data) external {}
 ```
  
 ### Run it

@@ -23,6 +23,7 @@ console.log = function (d) {
 
 const web3 = new Web3(
     new Web3.providers.WebsocketProvider(process.env.WSS_BLOCKS, {
+        // Enable auto reconnection
         reconnect: {
             auto: true,
             delay: process.env.DELAY, // ms
