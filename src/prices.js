@@ -1,7 +1,7 @@
 const request = require("async-request");
 
 module.exports.getPrices = async () => {
-    const response = await request('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,ethereum,bitcoin,tether,usd-coin,busd,chainlink,litecoin,sushi,uniswap&vs_currencies=usd');
+    const response = await request('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,ethereum,bitcoin,tether,usd-coin,busd&vs_currencies=usd');
 
     const prices = {};
 
